@@ -1,6 +1,6 @@
 import express from 'express';
 
-const router = express.Router();
+const healthRouter = express.Router();
 
 const getKoreaTime = () => {
   const now = new Date();
@@ -8,7 +8,7 @@ const getKoreaTime = () => {
   return koreaTime;
 };
 
-router.get('/', (req, res) => {
+healthRouter.get('/', (req, res) => {
   const koreaTime = getKoreaTime();
 
   res.json({
@@ -21,4 +21,4 @@ router.get('/', (req, res) => {
   });
 });
 
-export default router;
+export default healthRouter;
