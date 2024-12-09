@@ -1,3 +1,9 @@
+const API_BASE_URL = import.meta.env.env.API_BASE_URL;
+
+if (!API_BASE_URL) {
+  throw new Error('VITE_API_BASE_URL is not defined');
+}
+
 interface LoginProps {
   email: string;
   password: string;
@@ -5,17 +11,14 @@ interface LoginProps {
 
 export const login = async ({ email, password }: LoginProps) => {
   try {
-    const response = await fetch(
-      'https://port-0-motu-m3u4da1s4325e11d.sel4.cloudtype.app/auth/login',
-      {
-        method: 'POST', // 요청 메서드 추가
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({ email, password }), // 데이터를 JSON 형식으로 변환
+    const response = await fetch(`${API_BASE_URL}/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-    );
+      credentials: 'include',
+      body: JSON.stringify({ email, password }),
+    });
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
@@ -23,7 +26,7 @@ export const login = async ({ email, password }: LoginProps) => {
     return response;
   } catch (error) {
     console.error('Login error:', error);
-    throw error; // 호출부에서 에러 처리 가능하도록 다시 던짐
+    throw error;
   }
 };
 
@@ -35,16 +38,13 @@ interface SignUpProps {
 
 export const signUp = async ({ username, email, password }: SignUpProps) => {
   try {
-    const response = await fetch(
-      'https://port-0-motu-m3u4da1s4325e11d.sel4.cloudtype.app/auth/signup',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, email, password }), // 데이터를 JSON 형식으로 변환
+    const response = await fetch(`${API_BASE_URL}/auth/signup`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
-    );
+      body: JSON.stringify({ username, email, password }),
+    });
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
