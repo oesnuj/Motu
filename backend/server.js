@@ -25,8 +25,10 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-app.use('/health', healthRouter);
-app.use('/auth', authRouter );
+app.use(express.json());
+
+app.use("/health", healthRouter);
+app.use("/auth", authRouter);
 
 const PORT = process.env.PORT;
 app.listen(PORT, () => {
