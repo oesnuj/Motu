@@ -6,6 +6,15 @@ import authRouter  from './routes/authRoutes.js';
 
 dotenv.config();
 
+const NODE_ENV = process.env.NODE_ENV || "development"; // 기본값: development
+const CLIENT_URL =
+  NODE_ENV === "production"
+    ? process.env.PROD_CLIENT_URL
+    : process.env.DEV_CLIENT_URL;
+
+console.log(`Running in ${NODE_ENV} mode`);
+console.log(`Client URL: ${CLIENT_URL}`);
+
 const app = express();
 app.use(cors())
 
