@@ -16,7 +16,14 @@ console.log(`Running in ${NODE_ENV} mode`);
 console.log(`Client URL: ${CLIENT_URL}`);
 
 const app = express();
-app.use(cors())
+
+// CORS 설정
+const corsOptions = {
+  origin: process.env.CLIENT_URL || "http://localhost:3000", // 허용할 클라이언트 도메인
+  methods: ["GET", "POST", "PUT", "DELETE"], // 허용할 HTTP 메서드
+  credentials: true, // 쿠키 사용 허용
+};
+app.use(cors(corsOptions));
 
 app.use('/health', healthRouter);
 app.use('/auth', authRouter );
