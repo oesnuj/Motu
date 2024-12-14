@@ -1,8 +1,8 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import cors from 'cors';
-import healthRouter from './routes/healthRoute.js';
-import authRouter  from './routes/authRoutes.js';
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import healthRouter from "./routes/healthRoute.js";
+import authRouter from "./routes/authRoutes.js";
 
 dotenv.config();
 
@@ -19,7 +19,7 @@ const app = express();
 
 // CORS 설정
 const corsOptions = {
-  origin: process.env.CLIENT_URL || "http://localhost:3000", // 허용할 클라이언트 도메인
+  origin: CLIENT_URL || "http://localhost:3000", // 허용할 클라이언트 도메인
   methods: ["GET", "POST", "PUT", "DELETE"], // 허용할 HTTP 메서드
   credentials: true, // 쿠키 사용 허용
 };
