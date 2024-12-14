@@ -5,6 +5,7 @@ import {
   verifyHashPassword,
 } from "../utils/passwordUtils.js";
 import { generateAccessToken } from "../config/jwt.js";
+import db from "../config/db.js";
 
 const register = async (req, res) => {
   const { username, email, password } = req.body;
