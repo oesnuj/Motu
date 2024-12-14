@@ -43,6 +43,7 @@ export const signUp = async ({ username, email, password }: SignUpProps) => {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify({ username, email, password }),
     });
     if (!response.ok) {
