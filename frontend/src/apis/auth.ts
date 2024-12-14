@@ -22,7 +22,11 @@ export const login = async ({ email, password }: LoginProps) => {
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
+    const data = await response.json();
 
+    // 로그인 성공 로그
+    console.log('Login successful:', data);
+    alert('Login successful!'); // 알림 메시지 추가 (선택)
     return response;
   } catch (error) {
     console.error('Login error:', error);
@@ -49,6 +53,9 @@ export const signUp = async ({ username, email, password }: SignUpProps) => {
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
+    const data = await response.json();
+    console.log('Sign-up successful:', data);
+    alert('Sign-up successful!'); // 알림 메시지 추가 (선택)
 
     return response;
   } catch (error) {
