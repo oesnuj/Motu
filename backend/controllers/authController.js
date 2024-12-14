@@ -21,11 +21,13 @@ const register = async (req, res) => {
 
     const hashedPassword = await makeHashPassword(password);
     await createUser(username, email, hashedPassword);
-  } catch {
-    res.status(500).json({ message: "Internal server error." });
+    // 성공 응답
+    return res.status(201).json({ message: "User registered successfully." });
+  } catch (err) {
+    console.error("Error during registration:", err);
+    return res.status(500).json({ message: "Internal server error." });
   }
 };
-``;
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -40,22 +42,23 @@ const login = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found." });
     }
-    const isPasswordValid = verifyHashPassword(user.password_hash, password);
 
+    const isPasswordValid = verifyHashPassword(user.password_hash, password);
     if (!isPasswordValid) {
-      res.status(401).json({ message: "비밀번호가 일치하지 않습니다." });
+      return res.status(401).json({ message: "Invalid password." });
     }
 
     const accessToken = generateAccessToken({ id: user.user_id });
     res.cookie("accessToken", accessToken, {
-      httpOnly: true, // 클라이언트에서 JavaScript로 쿠키 접근 방지
-      secure: process.env.NODE_ENV === "production", // HTTPS 환경에서만 쿠키 전송
-      sameSite: "strict", // 동일한 도메인 요청만 허용
-      maxAge: 60 * 60 * 1000, // 쿠키 수명: 1시간
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 60 * 60 * 1000,
     });
-    res.status(200).json({ message: "Login successful.", accessToken });
-  } catch {
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(200).json({ message: "Login successful.", accessToken });
+  } catch (err) {
+    console.error("Error during login:", err);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
