@@ -38,7 +38,7 @@ interface SignUpProps {
 
 export const signUp = async ({ username, email, password }: SignUpProps) => {
   try {
-    const response = await fetch(`${API_BASE_URL}/auth/signup`, {
+    const response = await fetch(`${API_BASE_URL}/auth/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
