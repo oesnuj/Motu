@@ -2,6 +2,12 @@ import { validateRegister, validateLogin } from '../utils/validation.js';
 import { createUser, findUserByEmail } from '../models/user.js';
 import { makeHashPassword, verifyHashPassword } from '../utils/passwordUtils.js';
 import { generateAccessToken } from '../config/jwt.js';
+import { validateRegister, validateLogin } from "../utils/validation.js";
+import {
+  makeHashPassword,
+  verifyHashPassword,
+} from "../utils/passwordUtils.js";
+import { generateAccessToken } from "../config/jwt.js";
 
 const register = async (req, res) => {
   const { username, email, password } = req.body;
@@ -45,12 +51,17 @@ const login = async (req, res) => {
       }
 
     const accessToken = generateAccessToken({ id: user.user_id });
-    res.status(200).json({ message: 'Login successful.', accessToken,  });
-    } catch {
-      res.status(500).json({ message: 'Internal server error' });
-    }
-  };
-
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true, // 클라이언트에서 JavaScript로 쿠키 접근 방지
+      secure: process.env.NODE_ENV === "production", // HTTPS 환경에서만 쿠키 전송
+      sameSite: "strict", // 동일한 도메인 요청만 허용
+      maxAge: 60 * 60 * 1000, // 쿠키 수명: 1시간
+    });
+    res.status(200).json({ message: "Login successful.", accessToken });
+  } catch {
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 
   const logout = (req, res) => {
     res.clearCookie('accessToken');
