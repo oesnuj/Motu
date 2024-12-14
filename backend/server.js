@@ -23,16 +23,23 @@ console.log(`Client URL: ${CLIENT_URL}`);
 const app = express();
 
 const corsOptions = {
-  origin: CLIENT_URL,
+  origin: [process.env.PROD_CLIENT_URL, process.env.DEV_CLIENT_URL],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  credentials: true,
+  credentials: true, // 쿠키 허용
 };
-app.use(cors(corsOptions));
+
+app.options("*", cors(corsOptions));
 
 app.use(express.json());
 
 app.use("/health", healthRouter);
 app.use("/auth", authRouter);
+
+// 요청확인 핸들러
+app.use((req, res, next) => {
+  console.log(`Request received: ${req.method} ${req.url}`);
+  next();
+});
 
 // 404 핸들러
 app.use((req, res, next) => {
@@ -45,7 +52,7 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: "Internal server error" });
 });
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
