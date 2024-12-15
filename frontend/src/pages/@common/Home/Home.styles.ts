@@ -88,6 +88,43 @@ export const IndexCard = styled.div`
   }
 `;
 
+/* 추가된 스타일 */
+export const StockList = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 20px;
+`;
+
+export const StockCard = styled.div`
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+
+  h3 {
+    font-size: 1.3rem;
+    margin-bottom: 10px;
+    color: #333;
+  }
+
+  p {
+    font-size: 1rem;
+    margin-bottom: 5px;
+  }
+`;
+
+export const PriceChange = styled.span<{ isPositive: boolean }>`
+  font-weight: bold;
+  color: ${(props) => (props.isPositive ? '#28a745' : '#dc3545')};
+`;
+
 export const NewsSection = styled.section`
   padding: 40px 20px;
   background: #fff;

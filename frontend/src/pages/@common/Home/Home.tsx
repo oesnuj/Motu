@@ -1,45 +1,48 @@
-import React, { useState, useEffect } from 'react';
-import { fetchMarketSummary } from '@/apis/stock'; // API 호출 함수 임포트
+import React from 'react';
 import Layout from '@/components/@common/Layout/Layout.tsx';
 import {
   Hero,
-  FeatureSection,
-  GridContainer,
   IndexSection,
   IndexCard,
+  FeatureSection,
+  StockCard,
+  StockList,
+  PriceChange,
 } from '@/pages/@common/Home/Home.styles.ts';
 
-// MarketSummary 타입 정의
-interface MarketSummary {
+// 주요 지수 타입
+interface IndexSummary {
   id: number;
   name: string;
   value: string;
+  change: string;
 }
 
+// 주식 데이터 타입
+interface StockSummary {
+  id: number;
+  name: string;
+  price: string;
+  change: string;
+}
+
+// 더미 데이터: 주요 지수
+const dummyIndexes: IndexSummary[] = [
+  { id: 1, name: '나스닥', value: '19,024.72', change: '-23.88 (-0.1%)' },
+  { id: 2, name: 'S&P 500', value: '6,051.00', change: '+0.16 (+0.03%)' },
+  { id: 3, name: '코스피', value: '2,984.40', change: '-112.84 (-0.43%)' },
+];
+
+// 더미 데이터: 인기 주식
+const dummyStocks: StockSummary[] = [
+  { id: 1, name: 'AAPL (Apple)', price: '$170.45', change: '-1.17%' },
+  { id: 2, name: 'GOOGL (Alphabet)', price: '$2803.71', change: '+0.52%' },
+  { id: 3, name: 'AMZN (Amazon)', price: '$3450.98', change: '-0.16%' },
+  { id: 4, name: 'MSFT (Microsoft)', price: '$299.12', change: '+0.32%' },
+  { id: 5, name: 'TSLA (Tesla)', price: '$700.15', change: '+1.24%' },
+];
+
 const Home: React.FC = () => {
-  // API 데이터 저장용 상태값
-  const [marketSummary, setMarketSummary] = useState<MarketSummary[]>([]);
-  const [loading, setLoading] = useState<boolean>(true); // 로딩 상태값
-  const [error, setError] = useState<string | null>(null); // 에러 메시지
-
-  // 컴포넌트 초기 렌더링 시 API 호출
-  useEffect(() => {
-    const loadMarketSummary = async () => {
-      try {
-        setLoading(true); // 로딩 시작
-        const data = await fetchMarketSummary(); // API 호출
-        setMarketSummary(data); // 데이터 상태 업데이트
-      } catch (err) {
-        setError('데이터를 불러오는데 실패했습니다.'); // 에러 상태 업데이트
-        console.error(err);
-      } finally {
-        setLoading(false); // 로딩 종료
-      }
-    };
-
-    loadMarketSummary(); // 비동기 함수 호출
-  }, []);
-
   return (
     <Layout>
       {/* Hero Section */}
@@ -48,32 +51,33 @@ const Home: React.FC = () => {
         <p>쉽고 빠르게 투자 경험을 쌓아보세요.</p>
       </Hero>
 
-      {/* 로딩 중 처리 */}
-      {loading ? (
-        <p>데이터를 불러오는 중...</p>
-      ) : error ? (
-        // 에러 발생 시 메시지 출력
-        <p>{error}</p>
-      ) : (
-        <>
-          {/* 실시간 주가 지수 */}
-          <IndexSection>
-            {marketSummary.map((item) => (
-              <IndexCard key={item.id}>
-                <h3>{item.name}</h3>
-                <p>{item.value}</p>
-              </IndexCard>
-            ))}
-          </IndexSection>
-        </>
-      )}
+      {/* 주요 지수 섹션 */}
+      <IndexSection>
+        {dummyIndexes.map((index) => (
+          <IndexCard key={index.id}>
+            <h3>{index.name}</h3>
+            <p>{index.value}</p>
+            <PriceChange isPositive={index.change.includes('+')}>
+              {index.change}
+            </PriceChange>
+          </IndexCard>
+        ))}
+      </IndexSection>
 
-      {/* API 데이터 외 섹션 */}
+      {/* 인기 주식 섹션 */}
       <FeatureSection>
-        <h2>투자 정보</h2>
-        <GridContainer>
-          <p>API 데이터 외 콘텐츠는 여전히 렌더링됩니다.</p>
-        </GridContainer>
+        <h2>인기 주식 순위</h2>
+        <StockList>
+          {dummyStocks.map((stock) => (
+            <StockCard key={stock.id}>
+              <h3>{stock.name}</h3>
+              <p>가격: {stock.price}</p>
+              <PriceChange isPositive={stock.change.includes('+')}>
+                변동률: {stock.change}
+              </PriceChange>
+            </StockCard>
+          ))}
+        </StockList>
       </FeatureSection>
     </Layout>
   );
