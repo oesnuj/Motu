@@ -15,13 +15,16 @@ const db = mysql.createPool({
   },
 });
 
-db.getConnection()
-  .then((connection) => {
-    console.log("Database connected successfully!");
+(async () => {
+  try {
+    const connection = await db.getConnection();
+    console.log("Database connection successful!");
+    const [rows] = await connection.query("SELECT 1 + 1 AS result");
+    console.log("Test query result:", rows);
     connection.release();
-  })
-  .catch((error) => {
-    console.error("Database connection failed:", error.message);
-  });
+  } catch (err) {
+    console.error("Database connection test failed:", err.message);
+  }
+})();
 
 export default db;
