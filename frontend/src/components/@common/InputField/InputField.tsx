@@ -19,16 +19,22 @@ const InputField = ({
   error,
 }: InputFieldProps) => {
   return (
-    <>
+    <Styled.Container>
       {label && <Styled.Label>{label}</Styled.Label>}
       <Styled.Input
         type={type}
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        hasError={!!error} // 에러 여부에 따라 스타일 변경
       />
-      {error && <Styled.ErrorMessage>{error}</Styled.ErrorMessage>}
-    </>
+      {error && (
+        <Styled.ErrorMessage>
+          <Styled.ErrorIcon>⚠</Styled.ErrorIcon>
+          {error}
+        </Styled.ErrorMessage>
+      )}
+    </Styled.Container>
   );
 };
 

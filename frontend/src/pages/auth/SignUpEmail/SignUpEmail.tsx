@@ -13,38 +13,54 @@ const SignUp = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+
+  // 각 입력 필드별 에러 상태 관리
+  const [emailError, setEmailError] = useState('');
+  const [usernameError, setUsernameError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [confirmPasswordError, setConfirmPasswordError] = useState('');
+
   const [loading, setLoading] = useState(false);
 
   // 폼 제출 핸들러
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // 초기화
-    setError('');
-    setLoading(true);
+    // 각 에러 상태 초기화
+    setEmailError('');
+    setUsernameError('');
+    setPasswordError('');
+    setConfirmPasswordError('');
 
-    // 간단한 입력 검증
+    let isValid = true;
+
+    // 이메일 검증
     if (!email.includes('@')) {
-      setError('올바른 이메일 주소를 입력하세요.');
-      setLoading(false);
-      return;
+      setEmailError('올바른 이메일 주소를 입력하세요.');
+      isValid = false;
     }
+
+    // 닉네임 검증
     if (username.length < 2 || username.length > 20) {
-      setError('닉네임은 2~20자 사이여야 합니다.');
-      setLoading(false);
-      return;
+      setUsernameError('닉네임은 2~20자 사이여야 합니다.');
+      isValid = false;
     }
+
+    // 비밀번호 검증
     if (password.length < 8 || !/[!@#$%^&*]/.test(password)) {
-      setError('비밀번호는 8자 이상이며 특수문자를 포함해야 합니다.');
-      setLoading(false);
-      return;
+      setPasswordError('비밀번호는 8자 이상이며 특수문자를 포함해야 합니다.');
+      isValid = false;
     }
+
+    // 비밀번호 확인 검증
     if (password !== confirmPassword) {
-      setError('비밀번호가 일치하지 않습니다.');
-      setLoading(false);
-      return;
+      setConfirmPasswordError('비밀번호가 일치하지 않습니다.');
+      isValid = false;
     }
+
+    if (!isValid) return;
+
+    setLoading(true);
 
     try {
       const response = await signUp({ username, email, password });
@@ -54,10 +70,10 @@ const SignUp = () => {
         window.location.href = '/login'; // 로그인 페이지로 리다이렉트
       } else {
         const data = await response.json();
-        setError(data.message || '회원가입 실패');
+        setEmailError(data.message || '회원가입 실패');
       }
     } catch (error) {
-      setError(`서버와 통신에 실패했습니다. ${error}`);
+      setEmailError(`서버와 통신에 실패했습니다. ${error}`);
     } finally {
       setLoading(false);
     }
@@ -68,34 +84,39 @@ const SignUp = () => {
       <BackGroundCardStyles>
         <Form onSubmit={handleSubmit}>
           <Title>회원가입하고 투자 여정을 시작하세요!</Title>
+
           <InputField
             type="email"
             placeholder="example@motu.io"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            error={error}
+            error={emailError}
           />
+
           <InputField
             type="text"
             placeholder="닉네임 (2~20자)"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            error={error}
+            error={usernameError}
           />
+
           <InputField
             type="password"
             placeholder="비밀번호 (8자 이상, 특수문자 포함)"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            error={error}
+            error={passwordError}
           />
+
           <InputField
             type="password"
             placeholder="비밀번호 확인"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            error={error}
+            error={confirmPasswordError}
           />
+
           <Button
             type="submit"
             text={loading ? '회원가입 중...' : '회원가입'}
