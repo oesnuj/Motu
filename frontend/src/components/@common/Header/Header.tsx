@@ -61,7 +61,7 @@ const Header = () => {
       <Logo />
 
       <Styled.Nav>
-        <Link to="/home">홈</Link>
+        <Link to="/">홈</Link>
         <Link to="/stocks">주식 골라보기</Link>
         <Link to="/portfolio">포트폴리오</Link>
       </Styled.Nav>
