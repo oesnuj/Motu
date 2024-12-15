@@ -9,11 +9,24 @@ import {
   PriceChange,
 } from '@pages/@common/Stock/StockPage.styles.ts';
 
+// 주식 데이터 타입 재사용
+type Stock = {
+  id: number;
+  name: string;
+  price: number;
+  change: string;
+};
+
 const StocksPage: React.FC = () => {
-  const [stocks, setStocks] = useState<any[]>([]);
+  // useState에 명시적으로 Stock[] 타입 지정
+  const [stocks, setStocks] = useState<Stock[]>([]);
 
   useEffect(() => {
-    fetchStocks().then(setStocks);
+    fetchStocks()
+      .then(setStocks)
+      .catch((error) => {
+        console.error('Error fetching stocks:', error);
+      });
   }, []);
 
   return (
