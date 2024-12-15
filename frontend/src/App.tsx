@@ -7,40 +7,41 @@ import SignUpEmail from '@pages/auth/SignUpEmail/SignUpEmail.tsx';
 import Home from '@pages/@common/Home/Home.tsx';
 import PortfolioPage from '@pages/@common/PorfolioPage/PortfolioPage.tsx';
 import StocksPage from '@pages/@common/Stock/StockPage.tsx';
+import ProtectedRoute from '@/components/auth/ProtectedRoute.tsx';
+import { AuthProvider } from '@/components/auth/AuthContext.tsx';
 
-/**
- * App 컴포넌트
- * - React Router를 사용하여 애플리케이션의 라우팅을 관리
- * - 글로벌 스타일 적용 및 공통 헤더 포함
- */
 function App() {
   return (
-    <Router>
-      {/* 글로벌 스타일 적용 */}
-      <GlobalStyle />
-      {/* 공통 헤더 */}
-      <Header />
-      {/* 라우팅 설정 */}
-      <Routes>
-        {/* 홈 페이지 */}
-        <Route path="/" element={<Home />} />
-
-        {/* 주식 페이지 */}
-        <Route path="/stocks" element={<StocksPage />} />
-
-        {/* 포트폴리오 페이지 */}
-        <Route path="/portfolio" element={<PortfolioPage />} />
-
-        {/* 로그인 페이지 */}
-        <Route path="/login" element={<Login />} />
-
-        {/* 회원가입 페이지 */}
-        <Route path="/sign-up" element={<SignUp />} />
-
-        {/* 회원가입 이메일 인증 페이지 */}
-        <Route path="/sign-up/email" element={<SignUpEmail />} />
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <GlobalStyle />
+        <Header />
+        <Routes>
+          {/* 누구나 접근 가능한 페이지 */}
+          <Route path="/" element={<Home />} /> {/* 메인 페이지 */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/sign-up/email" element={<SignUpEmail />} />
+          {/* 보호된 경로 (로그인 필요) */}
+          <Route
+            path="/stocks"
+            element={
+              <ProtectedRoute>
+                <StocksPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/portfolio"
+            element={
+              <ProtectedRoute>
+                <PortfolioPage />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 
