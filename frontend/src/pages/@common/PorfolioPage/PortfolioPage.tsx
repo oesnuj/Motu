@@ -39,7 +39,7 @@ const PortfolioPage: React.FC = () => {
   const [totalProfit, setTotalProfit] = useState<number>(0);
 
   useEffect(() => {
-    fetchPortfolio()
+    fetchPortfolio(1)
       .then((data) => {
         setPortfolio(data);
 
